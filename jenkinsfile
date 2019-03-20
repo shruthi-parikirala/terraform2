@@ -1,0 +1,28 @@
+pipeline {
+ agent any
+ stages {
+    stage('Cloning git' ) {
+     steps {
+        git 'https://github.com/shruthi-parikirala/terraform2.git'
+        }
+    }
+    stage('Set terraform path') {
+     steps {
+        script {
+            def tfHome = tool name: 'Terraform'
+            env.PATH = "${tfHome}:${env.PATH}"
+            }
+        sh 'terraform -v'
+        }
+    }
+ 
+    stage('Provision infrastructure') {
+ 
+        steps {
+            sh 'terraform init'
+            sh 'terraform plan'
+            sh 'terraform apply'
+        }
+    }
+ }
+}
